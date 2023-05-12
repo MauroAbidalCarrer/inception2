@@ -1,0 +1,85 @@
+# On indique la version de docker-compose à utiliser pour ce fichier.
+version : '3'
+
+# On définit les services à mettre en place.
+services :
+  # On définit le nom du service à mettre en place.
+  mariadb :
+    # On définit le nom de l'image que crée notre Dockerfile.
+    image           : mariadb
+    # On définit le nom du conteneur que crée notre docker-compose.
+    container_name  : mariadb
+    # On indique que le serveur redémarre en cas de crash.
+    restart         : on-failure
+    # On définit le path de build.
+    build           : requirements/mariadb/
+    # On donne les variables d'environnement à ajouter au conteneur.
+    env_file :
+      - .env
+    # On définit les volumes liés à ce conteneur.
+    volumes :
+      - DB:/var/lib/mysql
+    # On inclus ce conteneur dans un docker network.
+    networks :
+      - inception
+
+  wordpress:
+    image           : wordpress
+    container_name  : wordpress
+    restart         : on-failure
+    build           : requirements/wordpress/
+    env_file :
+      - .env
+    volumes :
+      - WordPress:/var/www/wordpress
+    networks :
+      - inception
+    # Ce conteneur attendra le conteneur MariaDB pour être run.
+    depends_on :
+      - mariadb
+
+  nginx :
+    image           : nginx
+    container_name  : nginx
+    restart         : on-failure
+    build           : requirements/nginx/
+    volumes :
+      - WordPress:/var/www/wordpress
+    networks :
+      - inception
+    # Ceci sera la seule entrée de notre infrastructure.
+    ports :
+      - 443:443
+    depends_on :
+      - wordpress
+
+# On définit les volumes à mettre en place.
+volumes :
+  # On définit le nom du volume.
+  WordPress :
+    # On indique quel pilote de gestion de volume utiliser.
+    driver : local
+    # On définit certaines options spécifiques au pilote.
+    driver_opts :
+      # On définit le type du système de fichiers du volume.
+      # 'none' = on utilisera le système de fichier de l'hôte.
+      type    : 'none'
+      # On définit l'option de montage du volume.
+      # 'bind' = lien direct entre les répertoires.
+      o       : 'bind'
+      # On définit le chemin sur l'hôte du volume à monter.
+      device  : '/home/anguinau/data/WordPress'
+
+  DB :
+    driver : local
+    driver_opts :
+      type    : 'none'
+      o       : 'bind'
+      device  : '/home/anguinau/data/DB'
+
+# On crée un docker network.
+networks :
+  # On définit son nom.
+  inception :
+    # Les connexions s'effectueront via des adresses privées attribuées par docker.
+    driver : bridge
