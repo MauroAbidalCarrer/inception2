@@ -1,36 +1,24 @@
-# On part d'Alpine 3.16.
-FROM	alpine:3.16
+FROM debian:buster
 
-# On installe les dépendances de notre conteneur.
-# On crée un répertoire pour les clefs SSL.
-# On crée un répertoire pour les fichiers du site WordPress.
-# L'utilisateur qui exécute Nginx doit pouvoir écrire sur les logs.
-RUN		apk update --no-cache			\
-		&& apk upgrade --no-cache		\
-		&& apk add --no-cache			\
-			nginx						\
-			openssl						\
-		&& mkdir /ssl					\
-		&& mkdir /var/www/wordpress		\
-		&& chown -R nginx:nginx /var/log/nginx
+ARG DOMAIN_NAME
+ARG CERTS_
 
-# On génère le certificat SSL type X.509 auto-signé :
-	# Il sera valide 365 jours.
-	# La clé ne sera pas cryptée.
-	# La clé RSA générée fera 2048 bits.
-	# On indique ou stocker le certificat et la clé.
-	# On donne des informations complémentaires à notre certificat.
-RUN		openssl req -x509				\
-		-days 365						\
-		-nodes							\
-		-newkey rsa:2048				\
-		-out /ssl/anguinau.42.fr.crt	\
-		-keyout /ssl/anguinau.42.fr.key	\
-		-subj "/C=FR/ST=France"
+RUN apt-get update
+RUN apt-get install -y nginx openssl
 
-# On reconfigure Nginx.
-COPY	conf/nginx.conf		/etc/nginx/nginx.conf
-COPY	conf/default.conf	/etc/nginx/http.d/default.conf
+#RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out /etc/ssl/certs/nginx-selfsigned.crt -subj "/C=FR/L=KH/O=1337/OU=student/CN=[maabidal.42.fr](http:\/\/maabidal.42.fr)/"
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/nginx-selfsigned.key -out $CERTS_ -subj "/C=FR/L=KH/O=1337/OU=student/CN=[maabidal.42.fr](http:\/\/$DOMAIN_NAME)/"
 
-# Le conteneur se lancera avec la commande suivante pour PID 1.
-CMD		["nginx", "-g", "daemon off;"]
+EXPOSE 443:443
+
+#ADD conf /etc/nginx/sites-available/default
+ADD conf/nginx_conf /etc/nginx/sites-available/default
+ADD tools/setup_nginx.sh /setup_nginx.sh
+
+RUN chmod +x /setup_nginx.sh
+#CMD [ "nginx", "-g", "daemon off;"]
+#CMD ["echo", "\"CERTS_=$CERTS_\"", "&&", "/setup_nginx.sh"]
+#ENTRYPOINT /setup_nginx.sh
+
+ENTRYPOINT	["/entrypoint.sh"]
+CMD			["php-fpm8", "-F"]

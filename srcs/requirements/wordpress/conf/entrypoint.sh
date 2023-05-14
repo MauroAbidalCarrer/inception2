@@ -25,8 +25,8 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
 	
 	# On installe la base de données et on configure le site.
 	wp core install						\
-	--url=https://anguinau.42.fr		\
-	--title="[ WordPress by anguinau]"	\
+	--url=https://maabidal.42.fr		\
+	--title="[ WordPress by maabidal]"	\
 	--admin_user=$WP_ADMIN_USR			\
 	--admin_password=$WP_ADMIN_PASSWD	\
 	--admin_email=$WP_ADMIN_MAIL		\

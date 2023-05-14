@@ -6,7 +6,7 @@ services :
   # On définit le nom du service à mettre en place.
   mariadb :
     # On définit le nom de l'image que crée notre Dockerfile.
-    image           : mariadb
+    #image           : mariadb
     # On définit le nom du conteneur que crée notre docker-compose.
     container_name  : mariadb
     # On indique que le serveur redémarre en cas de crash.
@@ -24,7 +24,7 @@ services :
       - inception
 
   wordpress:
-    image           : wordpress
+    #image           : wordpress
     container_name  : wordpress
     restart         : on-failure
     build           : requirements/wordpress/
@@ -39,12 +39,18 @@ services :
       - mariadb
 
   nginx :
-    image           : nginx
+    #image           : nginx
+    env_file:
+      - .env
     container_name  : nginx
     restart         : on-failure
-    build           : requirements/nginx/
+    build           :
+      context: requirements/nginx/
+      args:
+          - CERTS_=${CERTS_}
+          - DOMAIN_NAME=${DOMAIN_NAME}
     volumes :
-      - WordPress:/var/www/wordpress
+      - WordPress:/var/www/html/wordpress
     networks :
       - inception
     # Ceci sera la seule entrée de notre infrastructure.
@@ -68,14 +74,14 @@ volumes :
       # 'bind' = lien direct entre les répertoires.
       o       : 'bind'
       # On définit le chemin sur l'hôte du volume à monter.
-      device  : '/home/anguinau/data/WordPress'
+      device  : '/home/maabidal/data/wordpress_vol'
 
   DB :
     driver : local
     driver_opts :
       type    : 'none'
       o       : 'bind'
-      device  : '/home/anguinau/data/DB'
+      device  : '/home/maabidal/data/mariadb_vol'
 
 # On crée un docker network.
 networks :
