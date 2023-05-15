@@ -64,7 +64,8 @@ RUN			adduser -D php					\
 # On reconfigure PHP-FPM.
 # On installe le script de démarrage du conteneur.
 COPY		conf/www.conf		/etc/php8/php-fpm.d/www.conf
-COPY		conf/entrypoint.sh	/entrypoint.sh
+COPY		tools/entrypoint.sh	/entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # On définit un port d'écoute pour les connexions inter-conteneur.
 EXPOSE		9000

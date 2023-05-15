@@ -12,8 +12,9 @@ RUN			apk update --no-cache		\
 
 # On reconfigure MariaDB.
 # On installe le script de démarrage du conteneur.
-COPY		conf/my.cnf			/etc/my.cnf
-COPY		conf/entrypoint.sh	/entrypoint.sh
+COPY conf/my.cnf			/etc/my.cnf
+COPY tools/entrypoint.sh	/entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
 # On définit un port d'écoute pour les connexions inter-conteneur.
 EXPOSE		3306

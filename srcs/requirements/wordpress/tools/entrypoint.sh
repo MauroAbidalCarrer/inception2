@@ -53,7 +53,8 @@ else
 fi
 
 chown -R www-data:www-data /var/www/html/wordpress
-ls -l /var/www/html/wordpress
+#ls -l /var/www/html/wordpress
 
+echo "Starting PHP-FPM pool..."
 # On lance la commande spécifiée en 'CMD' de notre Dockerfile.
 exec "$@"

@@ -5,16 +5,12 @@
 mkdir /var/run/mysqld
 chown -R mysql:mysql /var/run/mysqld
 chown -R mysql:mysql /var/lib/mysql/
-
-ls -Rl /var/lib/mysql/
-echo "whomami: "
-whomai
-echo "=========="
+echo "Gave ownershild to the '/var/lib/mysql/' and '/var/run/mysqld' directories"
 
 # On vérifie que la base de données n'existe pas déjà.
 if [ ! -d var/lib/mysql/${DB_NAME} ]; then
 
-	echo "DB does not exist, creating a new one"
+	echo "DB does not exist, creating a new one."
 
 	# On initialise MariaDB.
 	mysql_install_db --user=mysql --datadir=/var/lib/mysql
@@ -41,11 +37,11 @@ CREATE USER '${DB_USER}'@'%' IDENTIFIED BY '${DB_USER_PASSWD}';
 GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO '${DB_USER}'@'%';
 ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT_PASSWD}';
 EOF
-	echo "Created DB"
+	echo "Created DB."
 	# On stop le serveur MariaDB.
 	mysqladmin -p ${DB_ROOT_PASSWD} shutdown
 else
-	echo "DB does not exist, creating a new one"
+	echo "DB already exists."
 fi
 
 # On lance la commande spécifiée en 'CMD' de notre Dockerfile.

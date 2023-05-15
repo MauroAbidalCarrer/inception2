@@ -2,7 +2,7 @@ CONTAINERS := mariadb nginx wordpress
 
 IMAGES := srcs-mariadb srcs-nginx srcs-wordpress
 
-VOLUMES := DB WordPress
+VOLUMES := srcs_DB srcs_WordPress
 
 VOLUME_DIRS := /home/maabidal/data/wordpress_vol /home/maabidal/data/mariadb_vol
 
@@ -18,7 +18,7 @@ clean :
 	- docker stop $(CONTAINERS)
 	- docker rm $(CONTAINERS)
 	- docker image rm $(IMAGES)
-	- docker colume rm $(VOLUMES)
+	- docker volume rm $(VOLUMES)
 	- docker system prune -fa
 	- rm -rf $(VOLUME_DIRS)
 	
