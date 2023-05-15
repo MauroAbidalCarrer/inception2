@@ -9,7 +9,7 @@ echo -n "whoami: "
 whoami
 chmod 777 /var/www/html/wordpress
 chown -R www-data:www-data /var/www/html/wordpress
-ls -lR /var/www/html/
+#ls -lR /var/www/html/
 
 echo ""
 echo "Running nginx..."

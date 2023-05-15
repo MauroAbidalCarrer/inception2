@@ -31,7 +31,7 @@ services :
     env_file :
       - .env
     volumes :
-      - WordPress:/var/www/wordpress
+      - WordPress:/var/www/html/wordpress
     networks :
       - inception
     # Ce conteneur attendra le conteneur MariaDB pour être run.

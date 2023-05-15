@@ -1,5 +1,11 @@
 #!/bin/sh
 
+#adduser --help
+
+adduser -D www-data -G www-data
+
+#cat /etc/passwd
+
 echo "Trying to connected to DB."
 # On s'assure que le serveur MariaDB est bien lancé.
 while ! mysql -h mariadb -u$DB_USER -p$DB_USER_PASSWD --silent > /dev/null 2>&1; do
@@ -9,17 +15,17 @@ done
 echo "Connected to DB."
 
 # On vérifie que le site n'existe pas déjà.
-if [ ! -f /var/www/wordpress/wp-config.php ]; then
+if [ ! -f /var/www/html/wordpress/wp-config.php ]; then
 	echo "Going to create website."
 
 	# On installe WordPress dans le bon répertoire.
 	curl -O https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz
 	tar xf wordpress-6.0-fr_FR.tar.gz
-	mv wordpress/* /var/www/wordpress/
+	mv wordpress/* /var/www/html/wordpress/
 	rm wordpress-6.0-fr_FR.tar.gz
 	rm -r wordpress/
 
-	cd /var/www/wordpress
+	cd /var/www/html/wordpress
 
 	# On crée le fichier de configuration WordPress 'wp-config.php'.
 	wp config create					\
@@ -45,6 +51,9 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
 else
 	echo "website already created."
 fi
+
+chown -R www-data:www-data /var/www/html/wordpress
+ls -l /var/www/html/wordpress
 
 # On lance la commande spécifiée en 'CMD' de notre Dockerfile.
 exec "$@"
