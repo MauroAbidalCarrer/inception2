@@ -19,10 +19,12 @@ if [ ! -f /var/www/html/wordpress/wp-config.php ]; then
 	echo "Going to create website."
 
 	# On installe WordPress dans le bon répertoire.
-	curl -O https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz
-	tar xf wordpress-6.0-fr_FR.tar.gz
+#	curl -O https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz
+#	tar xf wordpress-6.0-fr_FR.tar.gz
+	curl -O https://fr.wordpress.org/latest-fr_FR.tar.gz
+	tar xf latest-fr_FR.tar.gz
 	mv wordpress/* /var/www/html/wordpress/
-	rm wordpress-6.0-fr_FR.tar.gz
+	rm latest-fr_FR.tar.gz
 	rm -r wordpress/
 
 	cd /var/www/html/wordpress
