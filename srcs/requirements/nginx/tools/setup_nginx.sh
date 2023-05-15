@@ -13,4 +13,4 @@ chown -R www-data:www-data /var/www/html/wordpress
 
 echo ""
 echo "Running nginx..."
-nginx -g "daemon off;"
+exec nginx -g "daemon off;"

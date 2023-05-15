@@ -1,6 +1,8 @@
 # On part d'Alpine 3.16.
 FROM		alpine:3.16
 
+STOPSIGNAL SIGTERM
+
 # On installe les dépendances de notre conteneur.
 	# PHP-			: Permet d'exécuter le code PHP.
 		# FPM		: Permet d'utiliser FastCGI.
