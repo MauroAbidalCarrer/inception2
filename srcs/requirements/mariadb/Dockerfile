@@ -18,4 +18,4 @@ EXPOSE		3306
 
 # Le conteneur se lancera avec notre entrypoint, puis mysqld deviendra PID 1.
 ENTRYPOINT	["/entrypoint.sh"]
-CMD			["mysqld", "--user=mysql"]
+CMD ["mysqld", "--user=mysql"]
