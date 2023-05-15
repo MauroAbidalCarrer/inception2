@@ -13,8 +13,6 @@ EXPOSE 443:443
 
 ADD conf/nginx_conf /etc/nginx/sites-available/default
 ADD tools/setup_nginx.sh /setup_nginx.sh
-
-COPY ./index.nginx-debian.html /var/www/html/wordpress/index.nginx-debian.html
-
 RUN chmod +x /setup_nginx.sh
+
 ENTRYPOINT ["/setup_nginx.sh"]
